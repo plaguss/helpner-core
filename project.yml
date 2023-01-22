@@ -1,5 +1,6 @@
 title: "Detecting Commands, Arguments and Options in CLI Help messages (Named Entity Recognition)"
-description: "TBD"
+description: "This project deals with the backbone model that powers [halpner](https://github.com/plaguss/helpner)."
+
 # Variables can be referenced across the project.yml using ${vars.var_name}
 vars:
   config: "config.cfg"

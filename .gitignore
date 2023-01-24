@@ -133,6 +133,9 @@ notes.md
 # Avoid tracking all the content from training/packaging
 packages/
 training/
+corpus/
 # Don't add any training data
 *.jsonl
 *.spacy
+
+project.lock

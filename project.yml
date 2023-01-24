@@ -1,11 +1,11 @@
 title: "Detecting Commands, Arguments and Options in CLI Help messages (Named Entity Recognition)"
-description: "This project deals with the backbone model that powers [halpner](https://github.com/plaguss/helpner)."
+description: "This project deals with the backbone model that powers [helpner](https://github.com/plaguss/helpner)."
 
 # Variables can be referenced across the project.yml using ${vars.var_name}
 vars:
   config: "config.cfg"
   name: "helpner_core"
-  version: "0.1.1"
+  version: "0.1.3"
   dataset: "dataset"
   train: "dataset_train"
   dev: "dataset_dev"
@@ -14,8 +14,7 @@ vars:
 # sure that they always exist.
 directories: ["assets", "training", "configs", "scripts", "corpus", "packages"]
 
-# Assets that should be downloaded or available in the directory. We're shipping
-# them with the project, so they won't have to be downloaded. But the
+# Assets that should be downloaded or available in the directory. But the
 # 'project assets' command still lets you verify that the checksums match.
 assets:
   - dest: "assets/${vars.dataset}.jsonl"
@@ -29,6 +28,16 @@ workflows:
     - evaluate
 
 commands:
+  - name: "create-dataset"
+    help: "Create a dataset using [cli-help-maker](https://github.com/plaguss/cli-help-maker)"
+    script:
+      - "cli-help-maker assets/v${vars.version}/dataset.yaml assets/v${vars.version}/dataset_v${vars.version}"
+    deps:
+      - "assets/v${vars.version}/dataset.yaml"
+    outputs:
+      - "assets/v${vars.version}/dataset_v${vars.version}/dataset.jsonl"
+      - "assets/v${vars.version}/dataset_v${vars.version}/arguments.jsonl"
+
   - name: "split"
     help: "Split the .jsonl dataset file contents in train/dev"
     script:
@@ -66,7 +75,7 @@ commands:
   - name: "evaluate"
     help: "Evaluate the model and export metrics"
     script:
-      - "python -m spacy evaluate training/model-best corpus/${vars.dev}.spacy --output training/metrics.json"
+      - "python -m spacy benchmark accuracy training/model-best corpus/${vars.dev}.spacy --output training/metrics.json"
     deps:
       - "corpus/${vars.dev}.spacy"
       - "training/model-best"
@@ -81,3 +90,11 @@ commands:
       - "training/model-best"
     outputs_no_cache:
       - "packages/en_${vars.name}-${vars.version}/dist/en_${vars.name}-${vars.version}.tar.gz"
+
+  - name: release
+    help: "WIP: Upload the packaged model to github releases"
+
+  - name: readme
+    help: "Auto-generate README via spacy."
+    script:
+      - "python -m spacy project document --output README.md"

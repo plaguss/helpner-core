@@ -2,7 +2,7 @@
 
 # 🪐 spaCy Project: Detecting Commands, Arguments and Options in CLI Help messages (Named Entity Recognition)
 
-TBD
+This project deals with the backbone model that powers [halpner](https://github.com/plaguss/helpner).
 
 ## 📋 project.yml
 
@@ -18,13 +18,14 @@ Commands are only re-run if their inputs have changed.
 
 | Command | Description |
 | --- | --- |
+| `create-dataset` | Create a dataset using [cli-help-maker](https://github.com/plaguss/cli-help-maker) |
 | `split` | Split the .jsonl dataset file contents in train/dev |
-| `preprocess` | Convert .jsonl files to .spacy format |
+| `convert` | Convert .jsonl files to .spacy format |
 | `train` | Train a named entity recognition model on cli help messages |
 | `evaluate` | Evaluate the model and export metrics |
 | `package` | Package the trained model so it can be installed |
-| `visualize-model` | Visualize the model's output interactively using Streamlit |
-| `visualize-data` | Explore the annotated data in an interactive Streamlit app |
+| `release` | WIP: Upload the packaged model to github releases |
+| `readme` | Auto-generate README via spacy. |
 
 ### ⏭ Workflows
 
@@ -35,7 +36,7 @@ inputs have changed.
 
 | Workflow | Steps |
 | --- | --- |
-| `all` | `split` &rarr; `preprocess` &rarr; `train` &rarr; `evaluate` |
+| `all` | `split` &rarr; `convert` &rarr; `train` &rarr; `evaluate` |
 
 ### 🗂 Assets
 

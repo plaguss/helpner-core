@@ -137,5 +137,3 @@ corpus/
 # Don't add any training data
 *.jsonl
 *.spacy
-
-project.lock

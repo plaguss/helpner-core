@@ -1,1 +1,5 @@
+# To generate training data
 cli-help-maker
+# development
+isort
+black

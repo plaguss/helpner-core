@@ -26,7 +26,7 @@ split:
       md5: cbe691a18a364cf40edb623824def8b5
     - path: assets/v0.1.3/dataset_v0.1.3/dataset_dev.jsonl
       md5: 66aa8cc8dec44194e435416a4ab168a7
-  spacy_version: 3.4.4
+  spacy_version: 3.5.0
   spacy_git_version: Unknown
 convert:
   cmd: python -m spacy run convert
@@ -39,11 +39,51 @@ convert:
     - path: assets/v0.1.3/dataset_v0.1.3/dataset_dev.jsonl
       md5: 66aa8cc8dec44194e435416a4ab168a7
     - path: scripts/convert.py
-      md5: 45a50b6bc4056ef470ef1996cb4745aa
+      md5: 05e933bba7aad231231870a82f316eec
   outs:
     - path: corpus/dataset_train.spacy
       md5: 4fed7babf9ff87c29a5059e4d6c5fc5b
     - path: corpus/dataset_dev.spacy
       md5: d5ec277610a8328839af9500239d1120
-  spacy_version: 3.4.4
+  spacy_version: 3.5.0
+  spacy_git_version: Unknown
+train:
+  cmd: python -m spacy run train
+  script:
+    - python -m spacy train configs/config.cfg --output training/ --paths.train corpus/dataset_train.spacy
+      --paths.dev corpus/dataset_dev.spacy
+  deps:
+    - path: corpus/dataset_train.spacy
+      md5: 4fed7babf9ff87c29a5059e4d6c5fc5b
+    - path: corpus/dataset_dev.spacy
+      md5: d5ec277610a8328839af9500239d1120
+  outs:
+    - path: training/model-best
+      md5: 3f3bcbc1abd2e122d77d3f892eeffd4b
+  spacy_version: 3.5.0
+  spacy_git_version: Unknown
+evaluate:
+  cmd: python -m spacy run evaluate
+  script:
+    - python -m spacy benchmark accuracy training/model-best corpus/dataset_dev.spacy
+      --output training/metrics.json
+  deps:
+    - path: corpus/dataset_dev.spacy
+      md5: d5ec277610a8328839af9500239d1120
+    - path: training/model-best
+      md5: 3f3bcbc1abd2e122d77d3f892eeffd4b
+  outs:
+    - path: training/metrics.json
+      md5: 846f70ba48a0c4bc32328e397a04f4b3
+  spacy_version: 3.5.0
+  spacy_git_version: Unknown
+readme:
+  cmd: python -m spacy run readme
+  script:
+    - python scripts/create_readme.py README.md
+  deps:
+    - path: training/metrics.json
+      md5: 846f70ba48a0c4bc32328e397a04f4b3
+  outs: []
+  spacy_version: 3.5.0
   spacy_git_version: Unknown

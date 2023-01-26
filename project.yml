@@ -97,4 +97,6 @@ commands:
   - name: readme
     help: "Auto-generate README via spacy."
     script:
-      - "python -m spacy project document --output README.md"
+      - "python scripts/create_readme.py README.md"
+    deps:
+      - "training/metrics.json"

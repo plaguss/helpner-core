@@ -6,6 +6,7 @@ Calls the autogenerator from spacy and adds some extra info.
 import subprocess
 import sys
 from pathlib import Path
+import textwrap
 
 import srsly
 import typer
@@ -33,7 +34,7 @@ def add_training_metrics(readme: str, content: MetricsType) -> str:
     """Adds the training metrics as tables."""
     md = MarkdownRenderer()
     md.add(md.title(2, "Model metrics"))
-    md.add("The present section shows the metrics obtained from the training process")
+    md.add("The following metrics are obtained from the `spacy benchmark accuracy` command:")
     md.add(md.title(3, "Accuracy"))
     accuracy_metrics = [
         (m, f"{content[m]*100:.2f}")
@@ -61,17 +62,31 @@ def add_versioning(readme: str) -> str:
     # Add how the model is versioned (following spacy-models)
     md = MarkdownRenderer()
     md.add(md.title(2, "Model versioning"))
-    md.add("The trained models are ready to be")
+    link = md.link("spacy-models", "https://github.com/explosion/spacy-models")
+    text = textwrap.dedent(
+        "The naming conventions and versioning scheme follows the conventions used in "
+        f"{link} (in spirit), but so much simplified.",
+    )
+    md.add(text)
+    link = md.link("model-versioning", "https://github.com/explosion/spacy-models#model-versioning")
+    md.add(f"See for the {link} section, replace `spaCy` with `helpner`, and that's the idea.")
 
     return readme + "\n" + md.text
 
 
 def add_downloading(readme: str) -> str:
-    """Adds the explanation of how the model is versioned."""
-    # Add how the model is versioned (following spacy-models)
+    """Adds the explanation of how the model is downloaded. """
+    # Install via pip
+    # Done in helpner
     md = MarkdownRenderer()
-    md.add(md.title(2, "Model versioning"))
-    md.add("The trained models are ready to be")
+    md.add(md.title(2, "Downloading a model"))
+    # spaCy: https://github.com/explosion/spacy-models#downloading-models
+    link = md.link("release assets", "https://github.com/plaguss/helpner-core/releases")
+    text = textwrap.dedent(
+        f"The trained models are uploaded as {link} in GitHub, so they can be installed via pip, \
+        and loaded in spacy via `spacy.load`."
+    )
+    md.add(text)
 
     return readme + "\n" + md.text
 
@@ -104,6 +119,7 @@ def main(
     metrics = get_metrics()
     readme = add_training_metrics(readme, metrics)
     readme = add_versioning(readme)
+    readme = add_downloading(readme)
     write_readme(readme, str(readme_path))
 
 

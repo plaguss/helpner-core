@@ -1,3 +1,4 @@
+spacy>=3.5.0  # Initial results were obtained with version 3.4.4
 # To generate training data
 cli-help-maker
 # development

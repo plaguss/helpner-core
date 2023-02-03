@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 import textwrap
+import pandas as pd
 
 import srsly
 import typer
@@ -24,6 +25,13 @@ def get_readme(path: Path) -> str:
 
 
 def get_metrics(path: Path = root / "training" / "metrics.json") -> MetricsType:
+    """Get the metrics data from the last trained model.
+    Assumes the file will be on the path defined by spacy.
+    """
+    return srsly.read_json(path)
+
+
+def get_arguments(path: Path = root / "training" / "metrics.json") -> MetricsType:
     """Get the metrics data from the last trained model.
     Assumes the file will be on the path defined by spacy.
     """
@@ -91,6 +99,26 @@ def add_downloading(readme: str) -> str:
     return readme + "\n" + md.text
 
 
+def add_arguments_jsonl(readme: str) -> str:
+    """Reads the arguments.jsonl generated from the program,
+    computes the descriptive statistics and writes the content to 
+    the README file.
+    """
+    project_yml = srsly.read_yaml(root / "project.yml")
+    path = project_yml["commands"][0]["outputs"][1]
+    path = path.replace("${vars.version}", project_yml["vars"]["version"])
+    df = pd.read_json(root / path, lines=True)
+    size = len(df)
+    df = df.describe().T.drop("count", axis=1)
+    resume_arguments = df.to_markdown()
+
+    md = MarkdownRenderer()
+    md.add(md.title(2, "Descriptive statistics of the last dataset used for training."))
+    md.add(f"A total of {size} help messages were used.")
+
+    return readme + "\n" + md.text + "\n" + resume_arguments + "\n"
+
+
 def write_readme(content: str, filename: str) -> None:
     with open(filename, "w") as f:
         f.write(content)
@@ -120,6 +148,7 @@ def main(
     readme = add_training_metrics(readme, metrics)
     readme = add_versioning(readme)
     readme = add_downloading(readme)
+    readme = add_arguments_jsonl(readme)
     write_readme(readme, str(readme_path))
 
 

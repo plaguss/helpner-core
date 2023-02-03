@@ -5,7 +5,7 @@ description: "This project deals with the backbone model that powers [helpner](h
 vars:
   config: "config.cfg"
   name: "helpner_core"
-  version: "0.1.3"
+  version: "0.2.0"
   dataset: "dataset"
   train: "dataset_train"
   dev: "dataset_dev"

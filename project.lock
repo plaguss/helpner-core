@@ -1,50 +1,50 @@
 create-dataset:
   cmd: python -m spacy run create-dataset
   script:
-    - cli-help-maker assets/v0.1.3/dataset.yaml assets/v0.1.3/dataset_v0.1.3
+    - cli-help-maker assets/v0.2.0/dataset.yaml assets/v0.2.0/dataset_v0.2.0
   deps:
-    - path: assets/v0.1.3/dataset.yaml
-      md5: a36d413267e67578dd9c9d1d0fe50fd3
+    - path: assets/v0.2.0/dataset.yaml
+      md5: 2b18c312e0266d5c8edc1e92028c6e3b
   outs:
-    - path: assets/v0.1.3/dataset_v0.1.3/dataset.jsonl
-      md5: cbb559d17df926d17c9e7a09fd58c4b8
-    - path: assets/v0.1.3/dataset_v0.1.3/arguments.jsonl
-      md5: ada4ad48fe45e91c00754845fc16f4a5
-  spacy_version: 3.4.4
+    - path: assets/v0.2.0/dataset_v0.2.0/dataset.jsonl
+      md5: 93e2989070ce966b27f2ba0bfe441346
+    - path: assets/v0.2.0/dataset_v0.2.0/arguments.jsonl
+      md5: 2fd49ef722bd2f8dab8b84f1ea4ab6d0
+  spacy_version: 3.5.0
   spacy_git_version: Unknown
 split:
   cmd: python -m spacy run split
   script:
-    - python scripts/split.py assets/v0.1.3/dataset_v0.1.3/dataset.jsonl
+    - python scripts/split.py assets/v0.2.0/dataset_v0.2.0/dataset.jsonl
   deps:
-    - path: assets/v0.1.3/dataset_v0.1.3/dataset.jsonl
-      md5: cbb559d17df926d17c9e7a09fd58c4b8
+    - path: assets/v0.2.0/dataset_v0.2.0/dataset.jsonl
+      md5: 93e2989070ce966b27f2ba0bfe441346
     - path: scripts/split.py
       md5: 8f893b0a08be1745bfc54f14c8bdd34d
   outs:
-    - path: assets/v0.1.3/dataset_v0.1.3/dataset_train.jsonl
-      md5: cbe691a18a364cf40edb623824def8b5
-    - path: assets/v0.1.3/dataset_v0.1.3/dataset_dev.jsonl
-      md5: 66aa8cc8dec44194e435416a4ab168a7
+    - path: assets/v0.2.0/dataset_v0.2.0/dataset_train.jsonl
+      md5: 2c15f717bf6647d0560ace8c00859196
+    - path: assets/v0.2.0/dataset_v0.2.0/dataset_dev.jsonl
+      md5: 62487e212ef04d10f8c4e2e8b1e0451f
   spacy_version: 3.5.0
   spacy_git_version: Unknown
 convert:
   cmd: python -m spacy run convert
   script:
-    - python scripts/convert.py assets/v0.1.3/dataset_v0.1.3/dataset_train.jsonl corpus/dataset_train.spacy
-    - python scripts/convert.py assets/v0.1.3/dataset_v0.1.3/dataset_dev.jsonl corpus/dataset_dev.spacy
+    - python scripts/convert.py assets/v0.2.0/dataset_v0.2.0/dataset_train.jsonl corpus/dataset_train.spacy
+    - python scripts/convert.py assets/v0.2.0/dataset_v0.2.0/dataset_dev.jsonl corpus/dataset_dev.spacy
   deps:
-    - path: assets/v0.1.3/dataset_v0.1.3/dataset_train.jsonl
-      md5: cbe691a18a364cf40edb623824def8b5
-    - path: assets/v0.1.3/dataset_v0.1.3/dataset_dev.jsonl
-      md5: 66aa8cc8dec44194e435416a4ab168a7
+    - path: assets/v0.2.0/dataset_v0.2.0/dataset_train.jsonl
+      md5: 2c15f717bf6647d0560ace8c00859196
+    - path: assets/v0.2.0/dataset_v0.2.0/dataset_dev.jsonl
+      md5: 62487e212ef04d10f8c4e2e8b1e0451f
     - path: scripts/convert.py
-      md5: 05e933bba7aad231231870a82f316eec
+      md5: 7302e3539a3bef40e775221590124fa3
   outs:
     - path: corpus/dataset_train.spacy
-      md5: 4fed7babf9ff87c29a5059e4d6c5fc5b
+      md5: 35124973f9a2a5a177516c6a3331c1c1
     - path: corpus/dataset_dev.spacy
-      md5: d5ec277610a8328839af9500239d1120
+      md5: 7c561b83bad9b681056c2c500fa9db91
   spacy_version: 3.5.0
   spacy_git_version: Unknown
 train:
@@ -54,12 +54,12 @@ train:
       --paths.dev corpus/dataset_dev.spacy
   deps:
     - path: corpus/dataset_train.spacy
-      md5: 4fed7babf9ff87c29a5059e4d6c5fc5b
+      md5: 35124973f9a2a5a177516c6a3331c1c1
     - path: corpus/dataset_dev.spacy
-      md5: d5ec277610a8328839af9500239d1120
+      md5: 7c561b83bad9b681056c2c500fa9db91
   outs:
     - path: training/model-best
-      md5: 3f3bcbc1abd2e122d77d3f892eeffd4b
+      md5: ff4502f49abbe748c9cdae6eaefc6120
   spacy_version: 3.5.0
   spacy_git_version: Unknown
 evaluate:
@@ -69,12 +69,12 @@ evaluate:
       --output training/metrics.json
   deps:
     - path: corpus/dataset_dev.spacy
-      md5: d5ec277610a8328839af9500239d1120
+      md5: 7c561b83bad9b681056c2c500fa9db91
     - path: training/model-best
-      md5: 3f3bcbc1abd2e122d77d3f892eeffd4b
+      md5: ff4502f49abbe748c9cdae6eaefc6120
   outs:
     - path: training/metrics.json
-      md5: 846f70ba48a0c4bc32328e397a04f4b3
+      md5: 43d6d3b901ec3e4c3714bb96ff240f8e
   spacy_version: 3.5.0
   spacy_git_version: Unknown
 readme:
@@ -83,7 +83,20 @@ readme:
     - python scripts/create_readme.py README.md
   deps:
     - path: training/metrics.json
-      md5: 846f70ba48a0c4bc32328e397a04f4b3
+      md5: 43d6d3b901ec3e4c3714bb96ff240f8e
   outs: []
+  spacy_version: 3.5.0
+  spacy_git_version: Unknown
+package:
+  cmd: python -m spacy run package
+  script:
+    - python -m spacy package training/model-best packages --name helpner_core --version
+      0.2.0 --force --build sdist,wheel
+  deps:
+    - path: training/model-best
+      md5: ff4502f49abbe748c9cdae6eaefc6120
+  outs:
+    - path: packages/en_helpner_core-0.2.0/dist/en_helpner_core-0.2.0.tar.gz
+      md5: e674b4c68bbd1d40dfb166313610bfec
   spacy_version: 3.5.0
   spacy_git_version: Unknown

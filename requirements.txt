@@ -4,3 +4,8 @@ cli-help-maker
 # development
 isort
 black
+ruff>=0.0.240
+# For analysis of the dataset generated
+pandas>=1.5.2
+# To allow transforming a dataframe to markdown.
+tabulate
